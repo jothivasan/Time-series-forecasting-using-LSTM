@@ -1,0 +1,146 @@
+{
+  "domains": {
+    "milk_production": {
+      "name": "Milk Production Forecasting",
+      "description": "Monthly milk production forecasting for dairy industry planning and inventory management",
+      "category": "Agriculture",
+      "target_column": "Milk Production",
+      "date_column": "Month",
+      "frequency": "monthly",
+      "features": ["Milk Production"],
+      "is_multivariate": false,
+      "default_lookback": 12,
+      "default_forecast_horizon": 12,
+      "unit": "pounds per cow",
+      "sample_file": "monthly-milk-production.csv",
+      "use_cases": [
+        "Production planning",
+        "Inventory management",
+        "Supply chain optimization",
+        "Demand forecasting"
+      ]
+    },
+    "crop_yield": {
+      "name": "Crop Yield Forecasting",
+      "description": "Agricultural crop yield prediction based on environmental factors and historical patterns",
+      "category": "Agriculture",
+      "target_column": "yield",
+      "date_column": "date",
+      "frequency": "monthly",
+      "features": ["rainfall", "temperature", "humidity", "yield"],
+      "is_multivariate": true,
+      "default_lookback": 12,
+      "default_forecast_horizon": 6,
+      "unit": "tons per hectare",
+      "sample_file": "crop_yield.csv",
+      "use_cases": [
+        "Harvest planning",
+        "Resource allocation",
+        "Market price prediction",
+        "Food security planning"
+      ]
+    },
+    "energy_consumption": {
+      "name": "Energy Consumption Forecasting",
+      "description": "Power demand forecasting for grid management and capacity planning",
+      "category": "Energy",
+      "target_column": "consumption",
+      "date_column": "datetime",
+      "frequency": "hourly",
+      "features": ["temperature", "day_of_week", "hour", "consumption"],
+      "is_multivariate": true,
+      "default_lookback": 24,
+      "default_forecast_horizon": 24,
+      "unit": "kWh",
+      "sample_file": "energy_consumption.csv",
+      "use_cases": [
+        "Load balancing",
+        "Capacity planning",
+        "Cost optimization",
+        "Renewable energy integration"
+      ]
+    },
+    "sales_demand": {
+      "name": "Sales Demand Forecasting",
+      "description": "Retail sales prediction for inventory and supply chain optimization",
+      "category": "Retail",
+      "target_column": "sales",
+      "date_column": "date",
+      "frequency": "daily",
+      "features": ["sales", "promotion", "holiday", "day_of_week"],
+      "is_multivariate": true,
+      "default_lookback": 30,
+      "default_forecast_horizon": 14,
+      "unit": "units sold",
+      "sample_file": "sales_demand.csv",
+      "use_cases": [
+        "Inventory management",
+        "Promotion planning",
+        "Staff scheduling",
+        "Revenue forecasting"
+      ]
+    },
+    "stock_prices": {
+      "name": "Stock Price Forecasting",
+      "description": "Financial market prediction for trading and investment decisions",
+      "category": "Finance",
+      "target_column": "close",
+      "date_column": "date",
+      "frequency": "daily",
+      "features": ["open", "high", "low", "close", "volume"],
+      "is_multivariate": true,
+      "default_lookback": 60,
+      "default_forecast_horizon": 5,
+      "unit": "USD",
+      "sample_file": "stock_prices.csv",
+      "use_cases": [
+        "Trading strategies",
+        "Portfolio management",
+        "Risk assessment",
+        "Market analysis"
+      ]
+    },
+    "weather_metrics": {
+      "name": "Weather Metrics Forecasting",
+      "description": "Climate and weather pattern prediction for various applications",
+      "category": "Climate",
+      "target_column": "temperature",
+      "date_column": "date",
+      "frequency": "daily",
+      "features": ["temperature", "humidity", "pressure", "wind_speed"],
+      "is_multivariate": true,
+      "default_lookback": 30,
+      "default_forecast_horizon": 7,
+      "unit": "°C",
+      "sample_file": "weather_metrics.csv",
+      "use_cases": [
+        "Weather forecasting",
+        "Agricultural planning",
+        "Event planning",
+        "Energy demand prediction"
+      ]
+    }
+  },
+  "preprocessing_config": {
+    "scaling_methods": ["minmax", "standard", "robust"],
+    "missing_value_strategies": ["forward_fill", "backward_fill", "interpolate", "mean", "median"],
+    "feature_engineering": {
+      "lag_features": true,
+      "rolling_statistics": true,
+      "date_features": true,
+      "difference_features": false
+    },
+    "validation_split": 0.2,
+    "test_split": 0.1
+  },
+  "model_config": {
+    "lstm_units": [50, 100, 150, 200],
+    "dropout_rates": [0.1, 0.2, 0.3],
+    "learning_rates": [0.001, 0.0001],
+    "batch_sizes": [16, 32, 64],
+    "epochs_range": [50, 100, 200, 500],
+    "activation": "tanh",
+    "optimizer": "adam",
+    "loss": "mse"
+  }
+}

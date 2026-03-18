@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Domain LSTM Forecasting System | Enterprise Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+             
+                <div class="logo-text">
+                    <h1>LSTM Forecasting Platform</h1>
+                    <p>Multi-Domain Time Series Intelligence</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-indicator" id="systemStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">System Ready</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" data-section="domain-selection">
+            
+            <span class="tab-text">Dataset Upload</span>
+        </button>
+        <button class="nav-tab" data-section="data-analysis">
+            
+            <span class="tab-text">Data Analysis</span>
+        </button>
+        <button class="nav-tab" data-section="model-config">
+            
+            <span class="tab-text">Model Configuration</span>
+        </button>
+        <button class="nav-tab" data-section="training">
+            
+            <span class="tab-text">Training</span>
+        </button>
+        <button class="nav-tab" data-section="forecasting">
+            
+            <span class="tab-text">Forecasting</span>
+        </button>
+        <button class="nav-tab" data-section="evaluation">
+            
+            <span class="tab-text">Evaluation</span>
+        </button>
+      
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Section 1: Domain Selection & Dataset Upload -->
+        <section id="domain-selection" class="content-section active">
+            <div class="section-header">
+                <h2>Dataset Management</h2>
+                <p>Upload custom time series data for analysis and forecasting</p>
+            </div>
+
+            <!-- Dataset Upload Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Upload Custom Dataset</h3>
+                </div>
+                <div class="card-body">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">📁</div>
+                        <h4>Drag & Drop CSV File</h4>
+                        <p>or click to browse</p>
+                        <input type="file" id="fileInput" accept=".csv" hidden>
+                    </div>
+                    <div class="upload-info">
+                        <p><strong>Requirements:</strong></p>
+                        <ul>
+                            <li>CSV format with headers</li>
+                            <li>Date/time column</li>
+                            <li>At least one numeric column</li>
+                            <li>Minimum 100 records recommended</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Domain Info -->
+            <div class="card" id="selectedDomainCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Dataset Information</h3>
+                </div>
+                <div class="card-body">
+                    <div id="domainInfo" class="domain-info-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Data Analysis & Preprocessing -->
+        <section id="data-analysis" class="content-section">
+            <div class="section-header">
+                <h2>Data Analysis & Preprocessing</h2>
+                <p>Explore dataset characteristics and configure preprocessing pipeline</p>
+            </div>
+
+            <div class="grid-3">
+                <!-- Dataset Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dataset Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="datasetStats" class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Records</span>
+                                <span class="stat-value" id="totalRecords">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Features</span>
+                                <span class="stat-value" id="totalFeatures">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Date Range</span>
+                                <span class="stat-value" id="dateRange">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Quality -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data Quality Report</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="qualityReport" class="quality-report">
+                            <!-- Quality metrics will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preprocessing Options -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Preprocessing Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Missing Value Strategy</label>
+                            <select id="missingValueStrategy" class="form-control">
+                                <option value="forward_fill">Forward Fill</option>
+                                <option value="backward_fill">Backward Fill</option>
+                                <option value="interpolate">Interpolate</option>
+                                <option value="mean">Mean</option>
+                                <option value="median">Median</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Scaling Method</label>
+                            <select id="scalingMethod" class="form-control">
+                                <option value="minmax">Min-Max Scaling</option>
+                                <option value="standard">Standard Scaling</option>
+                                <option value="robust">Robust Scaling</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="createLagFeatures">
+                                Create Lag Features
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="createRollingFeatures">
+                                Create Rolling Statistics
+                            </label>
+                        </div>
+                        <button class="btn btn-primary" id="preprocessBtn">
+                            Apply Preprocessing
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Preview -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Data Preview</h3>
+                </div>
+                <div class="card-body">
+                    <div id="dataPreview" class="table-container">
+                        <!-- Data preview table will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Model Configuration -->
+        <section id="model-config" class="content-section">
+            <div class="section-header">
+                <h2>LSTM Model Configuration</h2>
+                <p>Configure LSTM architecture and training parameters</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Architecture Configuration -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Model Architecture</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Look-back Window</label>
+                            <input type="number" id="lookback" class="form-control" value="12" min="3" max="60">
+                            <small>Number of past time steps to use for prediction</small>
+                        </div>
+                        <div class="form-group">
+                            <label>LSTM Units</label>
+                            <input type="number" id="lstmUnits" class="form-control" value="100" min="32" max="256" step="16">
+                            <small>Number of LSTM neurons in hidden layers</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Dropout Rate</label>
+                            <input type="number" id="dropoutRate" class="form-control" value="0.2" min="0" max="0.5" step="0.1">
+                            <small>Dropout rate for regularization (0-0.5)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Configuration -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Training Parameters</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Learning Rate</label>
+                            <input type="number" id="learningRate" class="form-control" value="0.001" min="0.0001" max="0.01" step="0.0001">
+                            <small>Optimizer learning rate</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Epochs</label>
+                            <input type="number" id="epochs" class="form-control" value="100" min="10" max="500" step="10">
+                            <small>Number of training epochs</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Size</label>
+                            <select id="batchSize" class="form-control">
+                                <option value="16">16</option>
+                                <option value="32" selected>32</option>
+                                <option value="64">64</option>
+                                <option value="128">128</option>
+                            </select>
+                            <small>Training batch size</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+         
+        </section>
+
+        <!-- Section 4: Training -->
+        <section id="training" class="content-section">
+            <div class="section-header">
+                <h2>Model Training</h2>
+                <p>Train LSTM model and monitor progress</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Training Control</h3>
+                </div>
+                <div class="card-body">
+                    <div class="training-controls">
+                        <button class="btn btn-primary btn-large" id="trainBtn">
+                            Start Training
+                        </button>
+                        <div class="training-status" id="trainingStatus">
+                            <span class="status-text">Ready to train</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Training Progress -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Training Progress</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="trainingProgress"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span id="currentEpoch">Epoch: 0/0</span>
+                                <span id="trainingTime">Time: 0s</span>
+                            </div>
+                        </div>
+                        <div class="metrics-grid" id="trainingMetrics">
+                            <div class="metric-card">
+                                <span class="metric-label">Training Loss</span>
+                                <span class="metric-value" id="trainLoss">-</span>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">Validation Loss</span>
+                                <span class="metric-value" id="valLoss">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Loss Curves</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="trainingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Results -->
+            <div class="card" id="testResultsCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Test Set Performance</h3>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid" id="testMetrics">
+                        <!-- Test metrics will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Forecasting -->
+        <section id="forecasting" class="content-section">
+            <div class="section-header">
+                <h2>Multi-Horizon Forecasting</h2>
+                <p>Generate short-term, mid-term, and long-term forecasts</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Forecast Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Forecast Horizon</label>
+                            <select id="forecastHorizon" class="form-control">
+                                <option value="mid_term" selected>Mid-term (4-12 steps)</option>
+                                <option value="long_term">Long-term (13+ steps)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Forecast Steps</label>
+                            <input type="number" id="forecastSteps" class="form-control" value="12" min="1" max="100">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="generateForecastBtn" style="margin-top: 24px;">
+                                Generate Forecast
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Results -->
+            <div class="card" id="forecastResultsCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Forecast Results</h3>
+                </div>
+                <div class="card-body">
+                    <div class="forecast-chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                    <div class="forecast-table-container" id="forecastTable">
+                        <!-- Forecast table will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Evaluation -->
+        <section id="evaluation" class="content-section">
+            <div class="section-header">
+                <h2>Performance Evaluation</h2>
+                <p>Comprehensive model performance analysis</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Evaluation Control</h3>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary" id="evaluateBtn">
+                        Run Evaluation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="card" id="metricsCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Performance Metrics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid-large" id="performanceMetrics">
+                        <!-- Metrics will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Analysis -->
+            <div class="card" id="errorAnalysisCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Error Distribution Analysis</h3>
+                </div>
+                <div class="card-body">
+                    <div id="errorDistribution" class="stats-grid">
+                        <!-- Error distribution will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+    </main>
+
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
